@@ -1,6 +1,6 @@
 module Admin::V1
   class CategoriesController < ApiController
-    before_action :load_category, only: [:update, :destroy]
+    before_action :load_category, only: [:show, :update, :destroy]
 
     def index
       @loading_service = Admin::ModelLoadingService.new(Category.all, searchable_params)
@@ -13,6 +13,8 @@ module Admin::V1
 
       save_category!
     end
+
+    def show; end
 
     def update
       @category.attributes = category_params
