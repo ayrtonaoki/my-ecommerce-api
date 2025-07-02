@@ -11,6 +11,7 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
     context 'without any params' do
       it 'returns 10 records' do
         get url, headers: auth_header(user)
+
         expect(body_json['products'].count).to eq 10
       end
 
@@ -19,11 +20,13 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
         expected_return = products[0..9].map do |product|
           build_game_product_json(product)
         end
+
         expect(body_json['products']).to contain_exactly *expected_return
       end
 
       it 'returns success status' do
         get url, headers: auth_header(user)
+
         expect(response).to have_http_status(:ok)
       end
     end
@@ -42,11 +45,13 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
         expected_return = search_name_products[0..9].map do |product|
           build_game_product_json(product)
         end
+
         expect(body_json['products']).to contain_exactly *expected_return
       end
 
       it 'returns success status' do
         get url, headers: auth_header(user), params: search_params
+
         expect(response).to have_http_status(:ok)
       end
     end
@@ -59,6 +64,7 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
 
       it 'returns records sized by :length' do
         get url, headers: auth_header(user), params: pagination_params
+
         expect(body_json['products'].count).to eq length
       end
 
@@ -67,11 +73,13 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
         expected_return = products[5..9].map do |product|
           build_game_product_json(product)
         end
+
         expect(body_json['products']).to contain_exactly *expected_return
       end
 
       it 'returns success status' do
         get url, headers: auth_header(user), params: pagination_params
+
         expect(response).to have_http_status(:ok)
       end
     end
@@ -85,11 +93,13 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
         expected_return = products[0..9].map do |product|
           build_game_product_json(product)
         end
+
         expect(body_json['products']).to contain_exactly *expected_return
       end
 
       it 'returns success status' do
         get url, headers: auth_header(user), params: order_params
+
         expect(response).to have_http_status(:ok)
       end
     end
@@ -122,17 +132,20 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
 
       it 'associates categories to Product' do
         post url, headers: post_header, params: product_params
+
         expect(Product.last.categories.ids).to contain_exactly *categories.map(&:id)
       end
 
       it 'returns last added Product' do
         post url, headers: post_header, params: product_params
         expected_product = build_game_product_json(Product.last)
+
         expect(body_json['product']).to eq expected_product
       end
 
       it 'returns success status' do
         post url, headers: post_header, params: product_params
+
         expect(response).to have_http_status(:ok)
       end
     end
@@ -199,11 +212,13 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
 
       it 'returns error message' do
         post url, headers: post_header, params: invalid_productable_params
+
         expect(body_json['errors']['fields']).to have_key('developer')
       end
 
       it 'returns unprocessable_entity status' do
         post url, headers: post_header, params: invalid_productable_params
+
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
@@ -233,11 +248,13 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
 
       it 'returns error message' do
         post url, headers: post_header, params: product_without_productable_params
+
         expect(body_json['errors']['fields']).to have_key('productable')
       end
 
       it 'returns unprocessable_entity status' do
         post url, headers: post_header, params: product_without_productable_params
+
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
@@ -250,11 +267,13 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
     it 'returns requested Product' do
       get url, headers: auth_header(user)
       expected_product = build_game_product_json(product)
+
       expect(body_json['product']).to eq expected_product
     end
 
     it 'returns success status' do
       get url, headers: auth_header(user)
+
       expect(response).to have_http_status(:ok)
     end
   end
@@ -276,12 +295,14 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
       it 'updates Product' do
         patch url, headers: patch_header, params: product_params
         product.reload
+
         expect(product.name).to eq new_name
       end
 
       it 'updates to new categories' do
         patch url, headers: patch_header, params: product_params
         product.reload
+
         expect(product.categories.ids).to contain_exactly *new_categories.map(&:id)
       end
 
@@ -289,11 +310,13 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
         patch url, headers: patch_header, params: product_params
         product.reload
         expected_product = build_game_product_json(product)
+
         expect(body_json['product']).to eq expected_product
       end
 
       it 'returns success status' do
         patch url, headers: patch_header, params: product_params
+
         expect(response).to have_http_status(:ok)
       end
     end
@@ -307,22 +330,26 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
         old_name = product.name
         patch url, headers: patch_header, params: product_invalid_params
         product.reload
+
         expect(product.name).to eq old_name
       end
 
       it 'keeps old categories' do
         patch url, headers: patch_header, params: product_invalid_params
         product.reload
+
         expect(product.categories.ids).to contain_exactly *old_categories.map(&:id)
       end
 
       it 'returns error message' do
         patch url, headers: patch_header, params: product_invalid_params
+
         expect(body_json['errors']['fields']).to have_key('name')
       end
 
       it 'returns unprocessable_entity status' do
         patch url, headers: patch_header, params: product_invalid_params
+
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
@@ -336,16 +363,19 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
         old_developer = product.productable.developer
         patch url, headers: patch_header, params: invalid_productable_params
         product.productable.reload
+
         expect(product.productable.developer).to eq old_developer
       end
 
       it 'returns error message' do
         patch url, headers: patch_header, params: invalid_productable_params
+
         expect(body_json['errors']['fields']).to have_key('developer')
       end
 
       it 'returns unprocessable_entity status' do
         patch url, headers: patch_header, params: invalid_productable_params
+
         expect(response).to have_http_status(:unprocessable_entity)
       end
     end
@@ -359,12 +389,14 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
       it 'updates Product' do
         patch url, headers: patch_header, params: product_without_productable_params
         product.reload
+
         expect(product.name).to eq new_name
       end
 
       it 'updates to new categories' do
         patch url, headers: patch_header, params: product_without_productable_params
         product.reload
+
         expect(product.categories.ids).to contain_exactly *new_categories.map(&:id)
       end
 
@@ -372,11 +404,13 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
         patch url, headers: patch_header, params: product_without_productable_params
         product.reload
         expected_product = build_game_product_json(product)
+
         expect(body_json['product']).to eq expected_product
       end
 
       it 'returns success status' do
         patch url, headers: patch_header, params: product_without_productable_params
+
         expect(response).to have_http_status(:ok)
       end
     end
@@ -401,11 +435,13 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
 
     it 'returns success status' do
       delete url, headers: auth_header(user)
+
       expect(response).to have_http_status(:no_content)
     end
 
     it 'does not return any body content' do
       delete url, headers: auth_header(user)
+
       expect(body_json).to_not be_present
     end
 
@@ -413,6 +449,7 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
       product_categories = create_list(:product_category, 3, product: product)
       delete url, headers: auth_header(user)
       expected_product_categories = ProductCategory.where(id: product_categories.map(&:id))
+
       expect(expected_product_categories.count).to eq 0
     end
 
@@ -421,6 +458,7 @@ RSpec.describe 'Admin V1 Products as :admin', type: :request do
       delete url, headers: auth_header(user)
       present_product_categories_ids = product_categories.map(&:id)
       expected_product_categories = ProductCategory.where(id: present_product_categories_ids)
+
       expect(expected_product_categories.ids).to contain_exactly(*present_product_categories_ids)
     end
   end
