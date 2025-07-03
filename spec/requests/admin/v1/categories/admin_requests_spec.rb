@@ -47,7 +47,6 @@ RSpec.describe 'Admin V1 Categories as :admin', type: :request do
           category.as_json(only: %i(id name))
         end
 
-        puts "############### #{body_json}"
         expect(body_json['categories']).to contain_exactly *expected_categories
       end
 
