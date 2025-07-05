@@ -7,4 +7,6 @@ class Game < ApplicationRecord
   validates :developer, presence: true
 
   enum mode: { pvp: 1, pve: 2, pvp_pve: 3 }
+
+  include LikeSearchable
 end

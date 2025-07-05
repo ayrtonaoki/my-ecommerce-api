@@ -10,4 +10,6 @@ RSpec.describe Game, type: :model do
   it { is_expected.to define_enum_for(:mode).with_values({ pvp: 1, pve: 2, pvp_pve: 3 }) }
 
   it { is_expected.to have_one :product }
+
+  it_has_behavior_of 'like searchable concern', :game, :developer
 end
