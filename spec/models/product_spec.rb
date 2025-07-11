@@ -15,11 +15,10 @@ RSpec.describe Product, type: :model do
 
   it { is_expected.to have_many(:product_categories).dependent(:destroy) }
   it { is_expected.to have_many(:categories).through(:product_categories) }
+  it { is_expected.to have_many(:wish_items) }
 
   it { is_expected.to validate_presence_of(:image) }
-
   it { is_expected.to validate_presence_of(:status) }
-
   it { is_expected.to validate_presence_of(:featured) }
 
   it { is_expected.to define_enum_for(:status).with_values ({ available: 1, unavailable: 2 }) }
