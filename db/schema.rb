@@ -43,6 +43,7 @@ ActiveRecord::Schema.define(version: 2025_07_09_005816) do
   end
 
   create_table "coupons", force: :cascade do |t|
+    t.string "name"
     t.string "code"
     t.integer "status"
     t.decimal "discount_value", precision: 5, scale: 2
