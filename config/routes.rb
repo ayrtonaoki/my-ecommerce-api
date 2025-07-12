@@ -6,6 +6,7 @@ Rails.application.routes.draw do
       get 'home' => 'home#index'
       resources :categories
       resources :products
+      resources :coupons
     end
   end
 
@@ -15,6 +16,7 @@ Rails.application.routes.draw do
       resources :products, only: [:index, :show]
       resources :categories, only: [:index]
       resources :wish_items, only: [:index, :create, :destroy]
+      post "/coupons/:coupon_code/validations", to: "coupon_validations#create"
     end
   end
 end
