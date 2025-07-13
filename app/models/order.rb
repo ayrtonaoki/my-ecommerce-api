@@ -3,6 +3,7 @@ class Order < ApplicationRecord
 
   DAYS_TO_DUE = 7
 
+  has_many :line_items
   belongs_to :user
   belongs_to :coupon, optional: true
 
